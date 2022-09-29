@@ -1,21 +1,20 @@
 // Projet3.js
-// Par Ronald Jean-Julien et Alexandru Burgoci
+// Par Ronald Jean-Julien et Axel Doray-Tardif
 // Date de remise: 
 // Librairie pour projet3.htm
 
 /*
-|--------------------------------------------------------------|
-| (GLOBAL; AJAX) Déclaration des variables de travail globales |
-|--------------------------------------------------------------|
+|----------------------------------------------------------------------------------|
+| (GLOBAL; AJAX) Déclaration des variables de travail globales
+|----------------------------------------------------------------------------------|
 */
 /* Détection automatique du dossier où est entreposé l'application serveur */
-// var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
-var strNomApplication = 'http://192.168.10.6/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
 
 /*
-|---------------------|
-| initialiseInterface |
-|---------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| initialiseInterface
+|--------------------------------------------------------------------------------------------------------------|
 */
 function initialiseInterface(binIdentificationPresente, binOperationsSuccursalesPresente, divSuccursalesPresente) {
     masqueB('divIdentification', !binIdentificationPresente);
@@ -23,541 +22,507 @@ function initialiseInterface(binIdentificationPresente, binOperationsSuccursales
     masqueB('divSuccursales', !divSuccursalesPresente);
 }
 
-/*-----------------------------------------------------------------------------------------------------------*/
 /*
-         _____             _    _           
-        /  __ \           | |  (_)          
-        | /  \/ ___   ___ | | ___  ___  ___ 
-        | |    / _ \ / _ \| |/ / |/ _ \/ __|
-        | \__/\ (_) | (_) |   <| |  __/\__ \
-         \____/\___/ \___/|_|\_\_|\___||___/
-                                    
-*/
-/*-----------------------------------------------------------------------------------------------------------*/
-
-/*
-|-----------------------|
-| initialiseIdentifiant |
-|-----------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| initialiseIdentifiant
+|--------------------------------------------------------------------------------------------------------------|
 */
 function initialiseIdentifiant() {
-    // A programmer
-    b("tbMatricule", recupereCookie("identifiant"))
-    b("tbMotDePasse", recupereCookie("motDePasse"))
-    if (b("tbMatricule", null) == "")
-        document.getElementById("btnNonSouvenir").style.display = 'none'
-    else 
-        document.getElementById("btnSouvenir").style.display = 'none'
+    var strIdentifiant = recupereCookie('identifiant');
+    var strMotDePasse = recupereCookie('motDePasse');
+    if(strIdentifiant == null || strMotDePasse == null) {
+        masqueB('btnSouvenir', false);
+        masqueB('btnNonSouvenir', true);
+    }
+    else {
+        masqueB('btnSouvenir', true);
+        masqueB('btnNonSouvenir', false);
+        b('tbMatricule', strIdentifiant);
+        b('tbMotDePasse', strMotDePasse);
+    }
 }
 
 /*
-|-----------------------|
-| enregistreIdentifiant |
-|-----------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| enregistreIdentifiant
+|--------------------------------------------------------------------------------------------------------------|
 */
 function enregistreIdentifiant() {
-    // A programmer
-    enregistreCookie("identifiant", b("tbMatricule", null), null)
-    enregistreCookie("motDePasse", b("tbMotDePasse", null), null)
-    document.getElementById("btnSouvenir").style.display = 'none'
-    document.getElementById("btnNonSouvenir").style.display = 'block'
+    enregistreCookie('identifiant', b('tbMatricule'), 365);
+    enregistreCookie('motDePasse', b('tbMotDePasse'), 365);
+    masqueB('btnSouvenir', true);
+    masqueB('btnNonSouvenir', false);
 }
 
 /*
-|--------------------|
-| detruitIdentifiant |
-|--------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| detruitIdentifiant
+|--------------------------------------------------------------------------------------------------------------|
 */
 function detruitIdentifiant() {
-    // A programmer
-    enregistreCookie("identifiant", null, -1)
-    enregistreCookie("motDePasse", null, -1)
-    document.getElementById("btnSouvenir").style.display = 'block'
-    document.getElementById("btnNonSouvenir").style.display = 'none'
+    var strIdentifiant = recupereCookie('identifiant');
+    var strMotDePasse = recupereCookie('motDePasse');
+    enregistreCookie('identifiant', strIdentifiant, -1);
+    enregistreCookie('motDePasse', strMotDePasse, -1);
+    masqueB('btnSouvenir', false);
+    masqueB('btnNonSouvenir', true);
 }
 
 /*
-|-------------|
-| deconnexion |
-|-------------|
+|--------------------------------------------------------------------------------------------------------------|
+| deconnexion
+|--------------------------------------------------------------------------------------------------------------|
 */
 function deconnexion() {
-    // A programmer
-    location.reload()
+    location.href = location.href;
 }
 
 /*
-|--------------------------|
-| effacerAjoutModification |
-|--------------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| effacerAjoutModification
+|--------------------------------------------------------------------------------------------------------------|
 */
 function effacerAjoutModification() {
-    // A programmer
-    b("tbVilleAjout", "")
-    b("tbBudgetAjout", "")
-    b("lblMessageAjout", "")
+    b('tbVilleAjout', '');
+    b('tbBudgetAjout', '');
+    b('lblMessageAjout', '');
 }
 
 /*
-|----------------|
-| effacerRetrait |
-|----------------|
+|--------------------------------------------------------------------------------------------------------------|
+| effacerRetrait
+|--------------------------------------------------------------------------------------------------------------|
 */
 function effacerRetrait() {
-    // A programmer
-    b("tbVilleRetrait", "")
-    b("lblMessageRetrait", "")
+    b('tbVilleRetrait', '');
+    b('lblMessageRetrait', '');
 }
 
 /*
-|----------------------------|
-| effacerBudgetVisualisation |
-|----------------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| effacerBudgetVisualisation
+|--------------------------------------------------------------------------------------------------------------|
 */
 function effacerBudgetVisualisation() {
-    // A programmer
-    b("tbVilleBudgetVisualisation", "")
-    b("lblMessageBudgetVisualisation", "")
-    b('lblBudgetVisualisation', "")
+    b('tbVilleBudgetVisualisation', '');
+    b('lblBudgetVisualisation', '');
+    b('lblMessageBudgetVisualisation', '');
 }
 
-/*-----------------------------------------------------------------------------------------------------------*/
 /*
-         $$$$$$\     $$$$$\  $$$$$$\  $$\   $$\ 
-        $$  __$$\    \__$$ |$$  __$$\ $$ |  $$ |
-        $$ /  $$ |      $$ |$$ /  $$ |\$$\ $$  |
-        $$$$$$$$ |      $$ |$$$$$$$$ | \$$$$  / 
-        $$  __$$ |$$\   $$ |$$  __$$ | $$  $$<  
-        $$ |  $$ |$$ |  $$ |$$ |  $$ |$$  /\$$\ 
-        $$ |  $$ |\$$$$$$  |$$ |  $$ |$$ /  $$ |
-        \__|  \__| \______/ \__|  \__|\__|  \__|
-*/
-/*-----------------------------------------------------------------------------------------------------------*/
-
-/*
-|-------------------------------|
-| Module ajax_compteSuccursales |
-|-------------------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_compteSuccursales
+|--------------------------------------------------------------------------------------------------------------|
 */
 function ajax_compteSuccursales() {
     /*
-    |------------------------|
-    | recupereReponseServeur |
-    |------------------------|
+    |-----------------------------------------------------------------------------------------------------------|
+    | recupereReponseServeur
+    |-----------------------------------------------------------------------------------------------------------|
     */
     function recupereReponseServeur(strVerdict) {
-        // A programmer
-        var tabReponseServeur = strVerdict.split(';')
-        b("lblSuccursales", "Nombres de succursale(s): " + tabReponseServeur[0])
-        if (tabReponseServeur[0] == 0) {
-            // b("lblSuccursales", "Aucune succursale enregistrée...")
-            masqueB("btnReinitialiser", true)
-            masqueB("tabRetrait", true)
-            masqueB("tabVisualisation", true)
+        b('lblReponse', strVerdict);
+        strVerdict = strVerdict.split(';')[0];
+        b('lblSuccursales', strVerdict);
+        if(strVerdict == '0') {
+            masqueB('btnReinitialiser', true);
+            masqueB('tabRetrait', true);
+            masqueB('tabVisualisation', true);
         }
         else {
-            masqueB("btnReinitialiser", false)
-            masqueB("tabRetrait", false)
-            masqueB("tabVisualisation", false)
+            masqueB('btnReinitialiser', false);
+            masqueB('tabRetrait', false);
+            masqueB('tabVisualisation', false);
         }
-        b("lblReponse", strVerdict)
     }
 
     /*
-    |-------------------------------------------|
-    | Module directeur (ajax_compteSuccursales) |
-    |-------------------------------------------|
+    |-----------------------------------------------------------------------------------------------------------|
+    | Module directeur (ajax_compteSuccursales)
+    |-----------------------------------------------------------------------------------------------------------|
     */
-    // A programmer
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-    strDonneesTransmises = 'Action=Succursale-Compte&Aut='+matricule+noMDP
+    var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+    var strMotDePasse = b('tbMotDePasse');
+    var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+    var strDonnees = 'Action=Succursale-Compte&Aut=' + strAuthorisation;
+    b('lblRequete', strNomApplication + '?' + strDonnees);
 
-    //requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-    
     let objDonnesTransmises = new URLSearchParams({
-        "Action=Succursale-Compte&Aut": matricule+noMDP
-     })
+      "Action": "Succursale-Compte",
+      "Aut": strAuthorisation
+    })
+    let objOptions = {
+      method: "POST",
+      body: objDonnesTransmises
+    }
 
-    b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
+    /* Envoi de la requête */
+    fetch(strNomApplication, objOptions)
+        .then(response => response.text())
+        .then(responseData => recupereReponseServeur(responseData))
+}
 
+/*
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_afficheListeSuccursales
+|--------------------------------------------------------------------------------------------------------------|
+*/
+function ajax_afficheListeSuccursales() {
+    /*
+    |-----------------------------------------------------------------------------------------------------------|
+    | recupereReponseServeur
+    |-----------------------------------------------------------------------------------------------------------|
+    */
+    function recupereReponseServeur(strVerdict) {
+        b('lblReponse', strVerdict);
+        var tabVerdict = strVerdict.split(';');
+        if (tabVerdict[0] == 'AUCUNE') {
+            b('lblSuccursales', 'Aucune succursale enregistrée...');
+        }
+        else {
+            var strFlux = '<table class="sTableauSuccursales"> ';
+            strFlux += '<tr class="sEnteteTableauSuccursales"> <td class="sCelNoSuccursale">No</td> <td class="sCelVille">Ville</td> <td class="sCelBudget">Budget</td> </tr> ';
+            for(var i = 0; i < tabVerdict.length - 1; i++) {
+                var strVille = tabVerdict[i].split(',')[0];
+                var strBudget = tabVerdict[i].split(',')[1];
+                strFlux += '<tr class="sCorpsTableauSuccursales"> <td class="sCelNoSuccursale">' + i + '</td> ';
+                strFlux += '<td class="sCelVille">' + strVille + '</td> ';
+                strFlux += '<td class="sCelBudget">' + strBudget + ' $' + '</td> </tr> ';
+            }
+            strFlux += '</table>';
+            b('lblSuccursales', strFlux);
+        }
+    }
+    
+    /*
+    |-----------------------------------------------------------------------------------------------------------|
+    | Module directeur (ajax_afficheListeSuccursales)
+    |-----------------------------------------------------------------------------------------------------------|
+    */
+    var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+    var strMotDePasse = b('tbMotDePasse');
+    var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+    var strDonnees = 'Action=Succursale-Liste&Aut=' + strAuthorisation;
+    b('lblRequete', strNomApplication + '?' + strDonnees);
+
+    let objDonnesTransmises = new URLSearchParams({
+      "Action": "Succursale-Liste",
+      "Aut": strAuthorisation
+    })
+    let objOptions = {
+      method: "POST",
+      body: objDonnesTransmises
+    }
+
+    /* Envoi de la requête */
+    fetch(strNomApplication, objOptions)
+        .then(response => response.text())
+        .then(responseData => recupereReponseServeur(responseData))
+}
+
+/*
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_tenteConnexion
+|--------------------------------------------------------------------------------------------------------------|
+*/
+function ajax_tenteConnexion() {
+    /*
+    |-----------------------------------------------------------------------------------------------------------|
+    | recupereReponseServeur
+    |-----------------------------------------------------------------------------------------------------------|
+    */
+    function recupereReponseServeur(strVerdict) {
+        b('lblReponse', strVerdict);
+        var tabVerdict = strVerdict.split(';');
+        if (tabVerdict[0] == 'PASOK') {
+            b('lblMessageConnexion', 'Utilisateur inconnu!');
+        } else if (tabVerdict[0] == 'OK') {
+            initialiseInterface(false, true, true);
+            b('lblNomComplet', tabVerdict[1] + ' ' + tabVerdict[2]);
+            ajax_compteSuccursales();
+        }
+    }
+
+    /*
+    |-----------------------------------------------------------------------------------------------------------|
+    | Module directeur (ajax_tenteConnexion)
+    |-----------------------------------------------------------------------------------------------------------|
+    */
+    var strMatricule = b('tbMatricule');
+    var strMotDePasse = b('tbMotDePasse');
+    var binMatriculeValide = /^\d{7}$/.test(strMatricule);
+    var binMotDePasseValide = /^([a-z]|[A-Z]){1,6}\d{5}$/.test(strMotDePasse);
+
+    if (!binMatriculeValide && !binMotDePasseValide) {
+        b('lblMessageConnexion', 'Indentifiant et mot de passe invalides!');
+    }
+    else if (!binMatriculeValide) {
+        b('lblMessageConnexion', 'Indentifiant invalide!');
+    }
+    else if (!binMotDePasseValide) {
+        b('lblMessageConnexion', 'Mot de passe invalide!');
+    }
+    else {
+        b('lblMessageConnexion', '');
+        var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+        var strDonnees = 'Action=Connexion&Mat=' + strMatricule + '&MDP=' + strMotDePasse;
+        b('lblRequete', strNomApplication + '?' + strDonnees);
+
+        let objDonnesTransmises = new URLSearchParams({
+          "Action": "Connexion",
+          "Mat": strMatricule,
+          "MDP": strMotDePasse
+        })
+        let objOptions = {
+          method: "POST",
+          body: objDonnesTransmises
+        }
+  
+        /* Envoi de la requête */
+        fetch(strNomApplication, objOptions)
+            .then(response => response.text())
+            .then(responseData => recupereReponseServeur(responseData))  
+    }
+}
+
+/*
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_tenteAjoutModificationSuccursale
+|--------------------------------------------------------------------------------------------------------------|
+*/
+
+ function ajax_tenteAjoutModificationSuccursale() {
+   /*
+   |-----------------------------------------------------------------------------------------------------------|
+   | recupereReponseServeur
+   |-----------------------------------------------------------------------------------------------------------|
+   */
+    function recupereReponseServeur(strVerdict) {
+        b('lblReponse', strVerdict);
+        strVerdict = strVerdict.split(';')[0];
+        if (strVerdict == 'PASOK') {
+            b('lblMessageAjout', 'Succursale existante!');
+        }
+        else if (strVerdict == 'OKM') {
+            b('lblMessageAjout', 'Succursale modifiée');
+        } else if (strVerdict == 'OKI') {
+            b('lblMessageAjout', 'Succursale ajoutée');
+            ajax_compteSuccursales();
+        }
+    }
+   /*
+   |-----------------------------------------------------------------------------------------------------------|
+   | Module directeur (ajax_tenteAjoutModificationSuccursale)
+   |-----------------------------------------------------------------------------------------------------------|
+   */
+    var strVille = b('tbVilleAjout');
+    var strBudget = b('tbBudgetAjout');
+    var expRegVille = /^([a-zA-Z]{1,}|[a-zA-Z]{1,}[-]){1,}$/;
+    var expRegBudget = /^\d{3,7}$/;
+    if (expRegVille.test(strVille) && expRegBudget.test(strBudget)) {
+        if (parseInt(strBudget) >= 500) {
+            var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+            var strMotDePasse = b('tbMotDePasse');
+            var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+            var strDonnees = 'Action=Succursale-Ajout&Aut=' + strAuthorisation;
+            strDonnees += '&Ville=' + strVille + '&Budget=' + strBudget;
+            b('lblRequete', strNomApplication + '?' + strDonnees);        
+
+            let objDonnesTransmises = new URLSearchParams({
+              "Action": "Succursale-Ajout",
+              "Aut": strAuthorisation,
+              "Ville": strVille,
+              "Budget": strBudget
+            })
+            let objOptions = {
+              method: "POST",
+              body: objDonnesTransmises
+            }
+      
+            /* Envoi de la requête */
+            fetch(strNomApplication, objOptions)
+                .then(response => response.text())
+                .then(responseData => recupereReponseServeur(responseData))  
+        } else {
+            b('lblMessageAjout', 'Budget invalide!');
+        }
+    } else {
+        if (!expRegVille.test(strVille) && !expRegBudget.test(strBudget)) {
+            b('lblMessageAjout', 'Ville et budget invalides!');
+        } else if (!expRegVille.test(strVille)) {
+            if (parseInt(strBudget) >= 500) {
+                b('lblMessageAjout', 'Ville invalide!');
+            }
+            else {
+                b('lblMessageAjout', 'Ville et budget invalides!');
+            }
+        } else if (!expRegBudget.test(strBudget)) {
+            b('lblMessageAjout', 'Budget invalide!');
+        }
+    }
+}
+
+/*
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_tenteRetraitSuccursale
+|--------------------------------------------------------------------------------------------------------------|
+*/
+function ajax_tenteRetraitSuccursale() {
+   /*
+   |-----------------------------------------------------------------------------------------------------------|
+   | recupereReponseServeur
+   |-----------------------------------------------------------------------------------------------------------|
+   */
+    function recupereReponseServeur(strVerdict) {
+        b('lblReponse', strVerdict);
+        strVerdict = strVerdict.split(';')[0];
+        if(strVerdict == 'PASOK') {
+            b('lblMessageRetrait', 'Succursale inconnue!');
+        }
+        else if(strVerdict == 'OK') {
+            b('lblMessageRetrait', 'Succursale retiré!');
+            ajax_compteSuccursales();
+        }
+    }
+   /*
+   |-----------------------------------------------------------------------------------------------------------|
+   | Module directeur (ajax_tenteRetraitSuccursale)
+   |-----------------------------------------------------------------------------------------------------------|
+   */
+    var strVille = b('tbVilleRetrait');
+    var expRegVille = /^([a-zA-Z]{1,}|[a-zA-Z]{1,}[-]){1,}$/;
+    if (expRegVille.test(strVille)) {
+      var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+      var strMotDePasse = b('tbMotDePasse');
+      var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+      var strDonnees = 'Action=Succursale-Retrait&Aut=' + strAuthorisation + '&Ville=' + strVille;
+      b('lblRequete', strNomApplication + '?' + strDonnees);
+        
+      let objDonnesTransmises = new URLSearchParams({
+        "Action": "Succursale-Retrait",
+        "Aut": strAuthorisation,
+        "Ville": strVille
+    })
     let objOptions = {
         method: "POST",
         body: objDonnesTransmises
     }
 
+    /* Envoi de la requête */
     fetch(strNomApplication, objOptions)
         .then(response => response.text())
-        .then(strReponseServeur => afficheEligibilite(strReponseServeur))
-        .catch(error => console.log(error))
-}
-
-
-
-
-
-
-
-/*
-|-------------------------------------|
-| Module ajax_afficheListeSuccursales |
-|-------------------------------------|
-*/
-function ajax_afficheListeSuccursales() {
-    /*
-    |------------------------|
-    | recupereReponseServeur |
-    |------------------------|
-    */
-    function recupereReponseServeur(strVerdict) {
-        // A programmer
-        var tabReponseServeur = strVerdict.split(';')
-        if (tabReponseServeur[0] == "AUCUNE")
-            b("lblSuccursales", "Aucune succursale enregistrée...")
-        else if (document.getElementById(tablearea)) {}
-        else {
-            b("lblSuccursales", "")
-            var tablearea = document.getElementById('lblSuccursales'),
-            table = document.createElement('table')
-            table.className = 'sTableauSuccursales'
-
-                // Entete
-                var trEntete = document.createElement('tr')
-
-                    // NoSuccursales
-                    var th = document.createElement('th')
-                    trEntete.appendChild(th)
-                    th.className = 'sEnteteTableauSuccursales'
-                    trEntete.cells[0].appendChild(document.createTextNode("No"))
-
-                    // Ville
-                    var th = document.createElement('th')
-                    trEntete.appendChild(th)
-                    th.className = 'sEnteteTableauSuccursales'
-                    trEntete.cells[1].appendChild(document.createTextNode("Ville"))
-
-                    // Budget
-                    var th = document.createElement('th')
-                    trEntete.appendChild(th)
-                    th.className = 'sEnteteTableauSuccursales'
-                    trEntete.cells[2].appendChild(document.createTextNode("Budget"))
-                
-                table.appendChild(trEntete)
-
-                for (var i = 0; i < tabReponseServeur.length-1; i++) {
-                    // Succursales
-                    var tr = document.createElement('tr')
-                        // NoSuccursale
-                        var td = document.createElement('td')
-                        tr.appendChild(td)
-                        td.className = 'sCorpsTableauSuccursales sCelNoSuccursales'
-                        tr.cells[0].appendChild(document.createTextNode(i+1))
-
-                        // Ville
-                        var td = document.createElement('td')
-                        tr.appendChild(td)
-                        td.className = 'sCorpsTableauSuccursales sCelVille'
-                        tr.cells[1].appendChild(document.createTextNode(tabReponseServeur[i].split(',')[0]))
-
-                        // Budget
-                        var td = document.createElement('td')
-                        tr.appendChild(td)
-                        td.className = 'sCorpsTableauSuccursales sCelBudget'
-                        tr.cells[2].appendChild(document.createTextNode(tabReponseServeur[i].split(',')[1] + " $"))
-
-                    table.appendChild(tr)
-                }
-
-            tablearea.appendChild(table)
-        }
-        b("lblReponse", strVerdict)
-    }
-
-    /*
-    |-------------------------------------------------|
-    | Module directeur (ajax_afficheListeSuccursales) |
-    |-------------------------------------------------|
-    */
-    // A programmer
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-    strDonneesTransmises = 'Action=Succursale-Liste&Aut='+matricule+noMDP
-
-    requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-    b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
-}
-
-
-
-
-
-
-
-/*
-|----------------------------|
-| Module ajax_tenteConnexion |
-|----------------------------|
-*/
-function ajax_tenteConnexion() {
-    /*
-    |------------------------|
-    | recupereReponseServeur |
-    |------------------------|
-    */
-    function recupereReponseServeur(strVerdict) {
-
-        var tabReponseServeur = strVerdict.split(';')
-            
-        /* Affichage du verdict */
-        switch (tabReponseServeur[0]) {
-            case 'OK':
-                masqueB('divIdentification', true)
-                masqueB('divSuccursales', false)
-                masqueB('divOperationsSuccursales', false)
-
-                b('lblNomComplet', tabReponseServeur[1] + ' ' + tabReponseServeur[2])
-                b('lblReponse', tabReponseServeur)
-                ajax_compteSuccursales()
-                break;
-            case 'PASOK' :
-                b('lblMessageConnexion', 'Utilisateur inconnu!')
-                b('lblReponse', tabReponseServeur)
-                break;
-        }
-    }
-
-    /*
-    |----------------------------------------|
-    | Module directeur (ajax_tenteConnexion) |
-    |----------------------------------------|
-    */
-    
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    var expRegMDP = /^[A-Z]{1,6}\d{5}$/i
-    var matValide = estUnMatricule(matricule)
-    var mDPValide = expRegMDP.test(motDePasse)
-
-    strDonneesTransmises = 'Action=Connexion&Mat='+matricule+'&MDP='+motDePasse
-
-    if (!matValide && !mDPValide) {
-        b('lblMessageConnexion', 'Identifiant et mot de passe invalide')
-    }
-    else if (!matValide && mDPValide) {
-        b('lblMessageConnexion', 'Identifiant invalide')
-    }
-    else if (matValide && !mDPValide) {
-        b('lblMessageConnexion', 'Mot de passe invalide')
-    }
-    else {
-        b('lblMessageConnexion', '')
-        requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-        b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
-    }
-}
-
-/*
-|----------------------------------------------|
-| Module ajax_tenteAjoutModificationSuccursale |
-|----------------------------------------------|
-*/
-
- function ajax_tenteAjoutModificationSuccursale() {
-   /*
-   |------------------------|
-   | recupereReponseServeur |
-   |------------------------|
-   */
-    function recupereReponseServeur(strVerdict) {
-        // A programmer
-
-        var tabReponseServeur = strVerdict.split(';')
-            
-        /* Affichage du verdict */
-        switch (tabReponseServeur[0]) {
-            case 'PASOK':
-                b("lblMessageAjout", "Succursale existante!")
-                break;
-            case 'OKM':
-                b("lblMessageAjout", "Succursale modifiée!")
-                break;
-            case 'OKI':
-                b("lblMessageAjout", "Succursale ajoutée!")
-                ajax_compteSuccursales();
-                break;
-        }
-        b('lblReponse', tabReponseServeur)
-    }
-   /*
-   |----------------------------------------------------------|
-   | Module directeur (ajax_tenteAjoutModificationSuccursale) |
-   |----------------------------------------------------------|
-   */
-    // A programmer
-
-    let ville = b("tbVilleAjout", null)
-    let budget = b("tbBudgetAjout", null)
-    var expRegVille = /^[A-Z]+(\-[A-Z]+)*$/i
-    var expRegBudget = /^\d{3,7}$/
-    var villeValide = expRegVille.test(ville)
-    var budgetValide = expRegBudget.test(budget) && (parseInt(budget) >= 500)
-
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-    strDonneesTransmises = 'Action=Succursale-Ajout&Aut=' + matricule + noMDP + "&Ville=" + ville + 
-                            "&Budget=" + budget
-
-    if (!villeValide && !budgetValide)
-        b("lblMessageAjout", "Ville et budget invalides!")
-    else if (!villeValide && budgetValide)
-        b("lblMessageAjout", "Ville invalide!")
-    else if (villeValide && !budgetValide)
-        b("lblMessageAjout", "Budget invalide!")
-    else {
-        b("lblMessageAjout", "")
-        requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-        b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
-    }
-}
-
-/*
-|------------------------------------|
-| Module ajax_tenteRetraitSuccursale |
-|------------------------------------|
-*/
-function ajax_tenteRetraitSuccursale() {
-   /*
-   |------------------------|
-   | recupereReponseServeur |
-   |------------------------|
-   */
-    function recupereReponseServeur(strVerdict) {
-        // A programmer 
-        var tabReponseServeur = strVerdict.split(';')
-            
-        /* Affichage du verdict */
-        switch (tabReponseServeur[0]) {
-            case 'PASOK':
-                b("lblMessageRetrait", "Succursale inconnue!")
-                break;
-            case 'OK':
-                b("lblMessageRetrait", "Succursale retirée!")
-                ajax_compteSuccursales();
-                break;
-        }
-        b('lblReponse', tabReponseServeur)
-    }
-   /*
-   |------------------------------------------------|
-   | Module directeur (ajax_tenteRetraitSuccursale) |
-   |------------------------------------------------|
-   */
-    // A programmer
-    let ville = b("tbVilleRetrait", null)
-    var expRegVille = /^[A-Z]+(\-[A-Z]+)*$/i
-    var villeValide = expRegVille.test(ville)
-
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-    strDonneesTransmises = 'Action=Succursale-Retrait&Aut=' + matricule + noMDP + "&Ville=" + ville
-
-    if (!villeValide && budgetValide)
-        b("lblMessageRetrait", "Ville invalide!")
-    else {
-        b("lblMessageRetrait", "")
-        requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-        b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
-    }
+        .then(responseData => recupereReponseServeur(responseData))  
+    } else {
+      b('lblMessageRetrait', 'Ville invalide!');
+  }
 }
 
 
 /*
-|------------------------------------------------|
-| Module ajax_tenteVisualisationBudgetSuccursale |
-|------------------------------------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_tenteVisualisationBudgetSuccursale
+|--------------------------------------------------------------------------------------------------------------|
 */
 
  function ajax_tenteVisualisationBudgetSuccursale() {
    /*
-   |------------------------|
-   | recupereReponseServeur |
-   |------------------------|
+   |-----------------------------------------------------------------------------------------------------------|
+   | recupereReponseServeur
+   |-----------------------------------------------------------------------------------------------------------|
    */
     function recupereReponseServeur(strVerdict) {
-        // A programmer 
-        var tabReponseServeur = strVerdict.split(';')
-
-        if (tabReponseServeur[0] == "PASOK") 
-            b('lblMessageBudgetVisualisation', "Succursale inconnue!")
-        else {
-            b('lblMessageBudgetVisualisation', "Budget affiché")
-            b('lblBudgetVisualisation', tabReponseServeur[0])
+        b('lblReponse', strVerdict);
+        strVerdict = strVerdict.split(';')[0];
+        if(strVerdict == 'PASOK') {
+            b('lblMessageBudgetVisualisation', 'Succursale inconnue!');
+            b('lblBudgetVisualisation', '');
         }
-        b('lblReponse', tabReponseServeur)
+        else if (strVerdict == 'ERREUR') {}
+        else {
+            b('lblMessageBudgetVisualisation', 'Budget affiché');
+            b('lblBudgetVisualisation', strVerdict);
+        }
     }
    /*
-   |------------------------------------------------------------|
-   | Module directeur (ajax_tenteVisualisationBudgetSuccursale) |
-   |------------------------------------------------------------|
+   |-----------------------------------------------------------------------------------------------------------|
+   | Module directeur (ajax_tenteVisualisationBudgetSuccursale)
+   |-----------------------------------------------------------------------------------------------------------|
    */
-    // A programmer
-    let ville = b("tbVilleBudgetVisualisation", null)
-    var expRegVille = /^[A-Z]+(\-[A-Z]+)*$/i
-    var villeValide = expRegVille.test(ville)
+    var strVille = b('tbVilleBudgetVisualisation');
+    var expRegVille = /^([a-zA-Z]{1,}|[a-zA-Z]{1,}[-]){1,}$/;
+    if (expRegVille.test(strVille)) {
+        var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+        var strMotDePasse = b('tbMotDePasse');
+        var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+        var strDonnees = 'Action=Succursale-Budget&Aut=' + strAuthorisation + '&Ville=' + strVille;
+        b('lblRequete', strNomApplication + '?' + strDonnees);
+        
+        let objDonnesTransmises = new URLSearchParams({
+            "Action": "Succursale-Budget",
+            "Aut": strAuthorisation,
+            "Ville": strVille
+        })
+        let objOptions = {
+            method: "POST",
+            body: objDonnesTransmises
+        }
 
-    let matricule = b("tbMatricule", null)
-    let motDePasse = b('tbMotDePasse', null)
-    let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-    strDonneesTransmises = 'Action=Succursale-Budget&Aut=' + matricule + noMDP + "&Ville=" + ville
-
-    if (!villeValide && budgetValide)
-        b("lblMessageBudgetVisualisation", "Ville invalide!")
-    else {
-        b("lblMessageBudgetVisualisation", "")
-        requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-        b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
+        /* Envoi de la requête */
+        fetch(strNomApplication, objOptions)
+            .then(response => response.text())
+            .then(responseData => recupereReponseServeur(responseData))
+    } else {
+        b('lblMessageBudgetVisualisation', 'Ville invalide!');
     }
 }
 
 /*
-|-------------------------------------|
-| Module ajax_reinitialiseSuccursales |
-|-------------------------------------|
+|--------------------------------------------------------------------------------------------------------------|
+| Module ajax_reinitialiseSuccursales
+|--------------------------------------------------------------------------------------------------------------|
 */
 function ajax_reinitialiseSuccursales() {
     /*
-    |------------------------|
-    | recupereReponseServeur |
-    |------------------------|
+    |-----------------------------------------------------------------------------------------------------------|
+    | recupereReponseServeur
+    |-----------------------------------------------------------------------------------------------------------|
     */
     function recupereReponseServeur(strVerdict) {
-        // A programmer
-        effacerAjoutModification()
-        effacerRetrait()
-        effacerBudgetVisualisation()
-        ajax_compteSuccursales()
-
-        b('lblReponse', tabReponseServeur)
+        b('lblReponse', strVerdict);
+        strVerdict = strVerdict.split(';')[0];
+        if (strVerdict == 'OK') {
+            effacerAjoutModification();
+            effacerRetrait();
+            effacerBudgetVisualisation();
+            ajax_compteSuccursales();
+        }
     }
     /*
-    |-------------------------------------------------|
-    | Module directeur (ajax_reinitialiseSuccursales) |
-    |-------------------------------------------------|
+    |-----------------------------------------------------------------------------------------------------------|
+    | Module directeur (ajax_reinitialiseSuccursales)
+    |-----------------------------------------------------------------------------------------------------------|
     */
-    // A programmer
+    var confirmation = confirm('Êtes-vous sûr de vouleir réinitialiser?');
+    if (confirmation) {
+        var strNomApplication = 'http://424w.cgodin.qc.ca/rjean-julien/Kit_Ajax_projet/gestion-bd-projet3.php';
+        var strMotDePasse = b('tbMotDePasse');
+        var strAuthorisation = b('tbMatricule') + strMotDePasse.substring(strMotDePasse.length - 5);
+        var strDonnees = 'Action=Succursale-Suppression&Aut=' + strAuthorisation;
+        b('lblRequete', strNomApplication + '?' + strDonnees);
 
-    if (!confirm("Cliquez sur OK pour confirmer la suppression de toutes les succursales enregistrées.")) {}
-    else {
-        let matricule = b("tbMatricule", null)
-        let motDePasse = b('tbMotDePasse', null)
-        let noMDP = motDePasse.substring(motDePasse.length - 5, motDePasse.length)
-        strDonneesTransmises = 'Action=Succursale-Suppression&Aut=' + matricule + noMDP
+        let objDonnesTransmises = new URLSearchParams({
+            "Action": "Succursale-Suppression",
+            "Aut": strAuthorisation
+        })
+        let objOptions = {
+            method: "POST",
+            body: objDonnesTransmises
+        }
 
-        requeteServeur(strNomApplication, strDonneesTransmises, recupereReponseServeur, true)
-        b("lblRequete", strNomApplication + '?\n' +strDonneesTransmises)
+        /* Envoi de la requête */
+        //requeteServeur(strNomApplication, strDonneesTransmises, afficheEligibilite, true)
+        fetch(strNomApplication, objOptions)
+            .then(response => response.text())
+            .then(responseData => recupereReponseServeur(responseData))
     }
 }
